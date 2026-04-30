@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml.Documents;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -219,6 +220,19 @@ namespace WinClock
 
         private void RootGrid_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
+            // Only drag if we're not clicking on an interactive element
+            if (e.OriginalSource is FrameworkElement fe)
+            {
+                // Traverse up to see if we're inside a button
+                DependencyObject current = fe;
+                while (current != null && current != RootGrid)
+                {
+                    if (current is Button || current is HyperlinkButton || current is MenuFlyoutItem)
+                        return;
+                    current = VisualTreeHelper.GetParent(current);
+                }
+            }
+
             var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
             SendMessage(hWnd, 0x00A1, (IntPtr)2, IntPtr.Zero);
         }
@@ -376,22 +390,30 @@ namespace WinClock
 
         private async void InfoButton_Click(object sender, RoutedEventArgs e)
         {
+            var textBlock = new TextBlock 
+            { 
+                FontSize = 16,
+                TextWrapping = TextWrapping.Wrap
+            };
+            
+            textBlock.Inlines.Add(new Run { Text = "All rights reserved to " });
+            
+            var hyperlink = new Hyperlink
+            {
+                Foreground = new SolidColorBrush(Microsoft.UI.Colors.DodgerBlue)
+            };
+            hyperlink.Inlines.Add(new Run { Text = "cpo7-corp" } );
+            hyperlink.Click += async (s, e2) =>
+            {
+                await Windows.System.Launcher.LaunchUriAsync(new Uri("https://github.com/cpo7-corp/WinClock"));
+            };
+            
+            textBlock.Inlines.Add(hyperlink);
+
             var dialog = new ContentDialog
             {
                 Title = "About WinClock",
-                Content = new StackPanel
-                {
-                    Spacing = 10,
-                    Children =
-                    {
-                        new TextBlock { Text = "All rights reserved to cpo7-corp", FontSize = 16 },
-                        new HyperlinkButton 
-                        { 
-                            Content = "GitHub Repository", 
-                            NavigateUri = new Uri("https://github.com/cpo7-corp/WinClock") 
-                        }
-                    }
-                },
+                Content = textBlock,
                 CloseButtonText = "OK",
                 XamlRoot = this.Content.XamlRoot
             };

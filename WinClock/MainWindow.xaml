@@ -108,7 +108,7 @@
                     BorderBrush="Transparent"
                     Width="40" Height="40"
                     Padding="0">
-                <FontIcon Glyph="&#xE946;" Opacity="0.1" FontSize="16"/>
+                <FontIcon Glyph="&#xE946;" Opacity="0.5" FontSize="16"/>
             </Button>
             <!-- Settings Button -->
             <Button x:Name="SettingsButton" 
@@ -117,7 +117,7 @@
                     BorderBrush="Transparent"
                     Width="40" Height="40"
                     Padding="0">
-                <SymbolIcon Symbol="Setting" Opacity="0.1"/>
+                <SymbolIcon Symbol="Setting" Opacity="0.5"/>
             </Button>
         </StackPanel>
 
