@@ -374,6 +374,31 @@ namespace WinClock
             catch { return ""; }
         }
 
+        private async void InfoButton_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new ContentDialog
+            {
+                Title = "About WinClock",
+                Content = new StackPanel
+                {
+                    Spacing = 10,
+                    Children =
+                    {
+                        new TextBlock { Text = "All rights reserved to cpo7-corp", FontSize = 16 },
+                        new HyperlinkButton 
+                        { 
+                            Content = "GitHub Repository", 
+                            NavigateUri = new Uri("https://github.com/cpo7-corp/WinClock") 
+                        }
+                    }
+                },
+                CloseButtonText = "OK",
+                XamlRoot = this.Content.XamlRoot
+            };
+
+            await dialog.ShowAsync();
+        }
+
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
             var settingsWindow = new SettingsWindow(this);

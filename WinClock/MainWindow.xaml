@@ -101,6 +101,15 @@
 
         <!-- Top Right Buttons -->
         <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" Spacing="5">
+            <!-- Info Button -->
+            <Button x:Name="InfoButton" 
+                    Click="InfoButton_Click"
+                    Background="Transparent"
+                    BorderBrush="Transparent"
+                    Width="40" Height="40"
+                    Padding="0">
+                <SymbolIcon Symbol="Info" Opacity="0.1"/>
+            </Button>
             <!-- Settings Button -->
             <Button x:Name="SettingsButton" 
                     Click="SettingsButton_Click"
