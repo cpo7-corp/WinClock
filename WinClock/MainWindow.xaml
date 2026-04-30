@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window
+    x:Class="WinClock.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:WinClock"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Title="WinClock">
+    
+
+
+
+    <Window.SystemBackdrop>
+        <MicaBackdrop />
+    </Window.SystemBackdrop>
+
+    <Grid x:Name="RootGrid" Padding="20" Tapped="RootGrid_Tapped" PointerPressed="RootGrid_PointerPressed" Background="Transparent">
+        <Grid.ContextFlyout>
+            <MenuFlyout>
+                <MenuFlyoutItem x:Name="MenuSettings" Text="Settings" Click="SettingsButton_Click">
+                    <MenuFlyoutItem.Icon>
+                        <SymbolIcon Symbol="Setting"/>
+                    </MenuFlyoutItem.Icon>
+                </MenuFlyoutItem>
+                <MenuFlyoutSeparator/>
+                <MenuFlyoutItem x:Name="MenuExit" Text="Exit" Click="MenuExit_Click">
+                    <MenuFlyoutItem.Icon>
+                        <SymbolIcon Symbol="Cancel"/>
+                    </MenuFlyoutItem.Icon>
+                </MenuFlyoutItem>
+            </MenuFlyout>
+        </Grid.ContextFlyout>
+        <!-- Background Image -->
+        <Image x:Name="BackgroundImage" Stretch="UniformToFill" Opacity="0.5" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+        <!-- Dimming Overlay (Visible during alert) -->
+        <Rectangle x:Name="DimmingOverlay" Fill="Black" Opacity="0" IsHitTestVisible="False"/>
+
+        <!-- Alert Flashing Border -->
+        <Border x:Name="AlertOverlay" BorderBrush="Red" BorderThickness="4" Opacity="0" CornerRadius="8" IsHitTestVisible="False">
+            <Border.Resources>
+                <Storyboard x:Name="AlertStoryboard" RepeatBehavior="Forever">
+                    <DoubleAnimation Storyboard.TargetName="AlertOverlay" Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:0.5" AutoReverse="True"/>
+                </Storyboard>
+            </Border.Resources>
+        </Border>
+
+        <!-- Main Clock Layout -->
+        <StackPanel x:Name="ClockContent" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="4">
+            <StackPanel.ChildrenTransitions>
+                <TransitionCollection>
+                    <EntranceThemeTransition FromVerticalOffset="20" IsStaggeringEnabled="True"/>
+                </TransitionCollection>
+            </StackPanel.ChildrenTransitions>
+
+            <!-- Time Display -->
+            <TextBlock x:Name="TimeTextBlock" 
+                       Text="00:00:00" 
+                       FontSize="72" 
+                       FontWeight="Bold" 
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"/>
+            
+            <!-- Date Display -->
+            <TextBlock x:Name="DateTextBlock" 
+                       Text="Thursday, April 30, 2026" 
+                       FontSize="18" 
+                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                       HorizontalAlignment="Center"
+                       Visibility="Visible"/>
+
+            <!-- Hebrew Date Display -->
+            <TextBlock x:Name="HebrewDateTextBlock" 
+                       Text="כ' בניסן ה'תשפ" 
+                       FontSize="16" 
+                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                       HorizontalAlignment="Center"
+                       Visibility="Collapsed"/>
+        </StackPanel>
+
+        <!-- Alert Content (Centered on top of everything) -->
+        <StackPanel x:Name="AlertContent" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="15" Visibility="Collapsed">
+            <!-- Alert Icon -->
+            <SymbolIcon x:Name="AlertIcon" Symbol="OutlineStar" Foreground="Red" Height="60"/>
+            
+            <!-- Alarm Label Display -->
+            <TextBlock x:Name="AlarmLabelTextBlock" 
+                       Text="" 
+                       FontSize="48" 
+                       FontWeight="Bold"
+                       Foreground="Red"
+                       HorizontalAlignment="Center"
+                       TextWrapping="Wrap"
+                       TextAlignment="Center"/>
+            
+            <!-- Dismiss Alert Button -->
+            <Button x:Name="DismissAlertButton" Content="Dismiss" Click="DismissAlertButton_Click" HorizontalAlignment="Center" Padding="20,10" Style="{StaticResource AccentButtonStyle}"/>
+        </StackPanel>
+
+        <!-- Top Right Buttons -->
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" Spacing="5">
+            <!-- Settings Button -->
+            <Button x:Name="SettingsButton" 
+                    Click="SettingsButton_Click"
+                    Background="Transparent"
+                    BorderBrush="Transparent"
+                    Width="40" Height="40"
+                    Padding="0">
+                <SymbolIcon Symbol="Setting" Opacity="0.1"/>
+            </Button>
+        </StackPanel>
+
+        <!-- Hidden Media Player for sound -->
+        <MediaPlayerElement x:Name="AlertPlayer" Visibility="Collapsed"/>
+    </Grid>
+</Window>

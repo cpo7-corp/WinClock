@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "WinClock (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "WinClock (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
