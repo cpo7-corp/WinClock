@@ -51,6 +51,10 @@
                         </ComboBox>
                     </StackPanel>
 
+                    <ToggleSwitch x:Name="AlwaysOnTopToggle" Header="Always on Top" IsOn="False" Toggled="AlwaysOnTopToggle_Toggled"/>
+
+
+
                     <StackPanel>
                         <TextBlock x:Name="TimeFormatLabel" Text="Time Format" Style="{StaticResource CaptionTextBlockStyle}"/>
                         <ComboBox x:Name="TimeFormatComboBox" SelectionChanged="TimeFormatComboBox_SelectionChanged" HorizontalAlignment="Stretch">
@@ -142,7 +146,7 @@
                         </StackPanel>
                     </StackPanel>
 
-                    <ToggleSwitch x:Name="AlwaysOnTopToggle" Header="Always on Top" IsOn="True" Toggled="AlwaysOnTopToggle_Toggled"/>
+
 
                     <!-- Hebrew Date Toggle -->
                     <CheckBox x:Name="HebrewDateCheckBox" Content="Show Hebrew Date" Checked="HebrewDateCheckBox_Changed" Unchecked="HebrewDateCheckBox_Changed"/>

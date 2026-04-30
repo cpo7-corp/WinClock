@@ -48,7 +48,7 @@ namespace WinClock
         private double _alertLabelFontSize = 48;
         private string _alertLabelFontFamily = "Segoe UI Variable";
         private Windows.UI.Color _alertLabelColor = Microsoft.UI.Colors.Red;
-        private bool _alwaysOnTop = true;
+        private bool _alwaysOnTop = false;
         private System.Collections.Generic.List<Alarm> _alarms = new System.Collections.Generic.List<Alarm>();
 
         // Public properties for SettingsWindow to access
