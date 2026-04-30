@@ -39,5 +39,6 @@
   "UpdateAlarmButton": "עדכן התראה",
   "CancelButton": "ביטול",
   "MenuSettings": "הגדרות",
-  "MenuExit": "יציאה"
+  "MenuExit": "יציאה",
+  "AlwaysOnTopLabel": "תמיד עליון"
 }

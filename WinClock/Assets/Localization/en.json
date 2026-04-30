@@ -39,5 +39,6 @@
   "UpdateAlarmButton": "Update Alarm",
   "CancelButton": "Cancel",
   "MenuSettings": "Settings",
-  "MenuExit": "Exit"
+  "MenuExit": "Exit",
+  "AlwaysOnTopLabel": "Always on Top"
 }

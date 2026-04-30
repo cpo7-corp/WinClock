@@ -48,6 +48,7 @@ namespace WinClock
         private double _alertLabelFontSize = 48;
         private string _alertLabelFontFamily = "Segoe UI Variable";
         private Windows.UI.Color _alertLabelColor = Microsoft.UI.Colors.Red;
+        private bool _alwaysOnTop = true;
         private System.Collections.Generic.List<Alarm> _alarms = new System.Collections.Generic.List<Alarm>();
 
         // Public properties for SettingsWindow to access
@@ -73,6 +74,7 @@ namespace WinClock
         public Windows.UI.Color AlertLabelColor { get => _alertLabelColor; set { _alertLabelColor = value; if (AlarmLabelTextBlock != null) AlarmLabelTextBlock.Foreground = new SolidColorBrush(value); SaveSettings(); } }
         public int WindowWidth { get => _windowWidth; set { _windowWidth = value; ResizeWindow(); SaveSettings(); } }
         public int WindowHeight { get => _windowHeight; set { _windowHeight = value; ResizeWindow(); SaveSettings(); } }
+        public bool AlwaysOnTop { get => _alwaysOnTop; set { _alwaysOnTop = value; UpdateAlwaysOnTop(); SaveSettings(); } }
 
         public MainWindow()
         {
@@ -93,6 +95,22 @@ namespace WinClock
             ApplyAllSettings();
         }
 
+        private void UpdateAlwaysOnTop()
+        {
+            var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+            var windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
+            var appWindow = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(windowId);
+
+            if (appWindow != null)
+            {
+                var presenter = appWindow.Presenter as Microsoft.UI.Windowing.OverlappedPresenter;
+                if (presenter != null)
+                {
+                    presenter.IsAlwaysOnTop = _alwaysOnTop;
+                }
+            }
+        }
+
         private void SetupWidgetBehavior()
         {
             var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
@@ -105,7 +123,7 @@ namespace WinClock
                 var presenter = appWindow.Presenter as Microsoft.UI.Windowing.OverlappedPresenter;
                 if (presenter != null)
                 {
-                    presenter.IsAlwaysOnTop = true;
+                    presenter.IsAlwaysOnTop = _alwaysOnTop;
                     presenter.IsResizable = false;
                     presenter.IsMinimizable = false;
                     presenter.IsMaximizable = false;
@@ -139,6 +157,7 @@ namespace WinClock
             settings.Values["AlertLabelFontSize"] = _alertLabelFontSize;
             settings.Values["AlertLabelFontFamily"] = _alertLabelFontFamily;
             settings.Values["AlertLabelColor"] = ColorToHex(_alertLabelColor);
+            settings.Values["AlwaysOnTop"] = _alwaysOnTop;
             SaveAlarms();
         }
 
@@ -180,6 +199,7 @@ namespace WinClock
             if (settings.Values.ContainsKey("AlertLabelFontSize")) _alertLabelFontSize = (double)settings.Values["AlertLabelFontSize"];
             if (settings.Values.ContainsKey("AlertLabelFontFamily")) _alertLabelFontFamily = (string)settings.Values["AlertLabelFontFamily"];
             if (settings.Values.ContainsKey("AlertLabelColor")) _alertLabelColor = HexToColor((string)settings.Values["AlertLabelColor"]);
+            if (settings.Values.ContainsKey("AlwaysOnTop")) _alwaysOnTop = (bool)settings.Values["AlwaysOnTop"];
             
             if (settings.Values.ContainsKey("AlarmsJson"))
             {

@@ -134,6 +134,8 @@ namespace WinClock
             }
             if (DateFontFamilyComboBox.SelectedItem == null) DateFontFamilyComboBox.SelectedIndex = 0;
             
+            AlwaysOnTopToggle.IsOn = _mainWindow.AlwaysOnTop;
+
             ApplyLocalization();
         }
 
@@ -308,6 +310,7 @@ namespace WinClock
             HebrewDateFontSizeLabel.Text = LocalizationManager.GetString("HebrewDateFontSizeLabel");
             HebrewDateFontFamilyLabel.Text = LocalizationManager.GetString("HebrewDateFontFamilyLabel");
             HebrewDateColorLabel.Text = LocalizationManager.GetString("HebrewDateColorLabel");
+            AlwaysOnTopToggle.Header = LocalizationManager.GetString("AlwaysOnTopLabel");
 
             AlertLabelFontSizeLabel.Text = LocalizationManager.GetString("AlertLabelFontSizeLabel");
             AlertLabelFontFamilyLabel.Text = LocalizationManager.GetString("AlertLabelFontFamilyLabel");
@@ -419,6 +422,14 @@ namespace WinClock
         private void WindowHeightSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
             if (_mainWindow != null) _mainWindow.WindowHeight = (int)e.NewValue;
+        }
+
+        private void AlwaysOnTopToggle_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (_mainWindow != null)
+            {
+                _mainWindow.AlwaysOnTop = AlwaysOnTopToggle.IsOn;
+            }
         }
 
         private void AutoDismissTextBox_TextChanged(object sender, TextChangedEventArgs e)
