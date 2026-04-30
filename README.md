@@ -14,6 +14,9 @@ A beautiful, highly configurable, and localized WinUI 3 digital clock widget for
 
 ## Installation
 
+You can download the latest version from the [Releases](https://github.com/cpo7-corp/WinClock/releases) page. Simply download and run the `WinClock_1.0_x64.msixbundle` file.
+
+
 To ensure you can install and run the widget, follow these steps:
 
 ### 1. Enable Developer Mode
