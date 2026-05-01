@@ -49,6 +49,8 @@ namespace WinClock
         private string _alertLabelFontFamily = "Segoe UI Variable";
         private Windows.UI.Color _alertLabelColor = Microsoft.UI.Colors.Red;
         private bool _alwaysOnTop = false;
+        private int _windowX = -1;
+        private int _windowY = -1;
         private System.Collections.Generic.List<Alarm> _alarms = new System.Collections.Generic.List<Alarm>();
 
         // Public properties for SettingsWindow to access
@@ -80,6 +82,7 @@ namespace WinClock
         {
             this.InitializeComponent();
             this.Title = "WinClock Widget";
+            this.Closed += (s, e) => SaveSettings();
             
             LoadSettings();
             LocalizationManager.LoadLanguage(_language);
@@ -129,6 +132,20 @@ namespace WinClock
                     presenter.IsMaximizable = false;
                     presenter.SetBorderAndTitleBar(false, false);
                 }
+
+                if (_windowX != -1 && _windowY != -1)
+                {
+                    appWindow.Move(new Windows.Graphics.PointInt32(_windowX, _windowY));
+                }
+
+                appWindow.Changed += (s, args) =>
+                {
+                    if (args.DidPositionChange)
+                    {
+                        _windowX = appWindow.Position.X;
+                        _windowY = appWindow.Position.Y;
+                    }
+                };
             }
         }
 
@@ -158,6 +175,18 @@ namespace WinClock
             settings.Values["AlertLabelFontFamily"] = _alertLabelFontFamily;
             settings.Values["AlertLabelColor"] = ColorToHex(_alertLabelColor);
             settings.Values["AlwaysOnTop"] = _alwaysOnTop;
+
+            var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+            var windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
+            var appWindow = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(windowId);
+            if (appWindow != null)
+            {
+                _windowX = appWindow.Position.X;
+                _windowY = appWindow.Position.Y;
+            }
+            settings.Values["WindowX"] = _windowX;
+            settings.Values["WindowY"] = _windowY;
+
             SaveAlarms();
         }
 
@@ -200,6 +229,8 @@ namespace WinClock
             if (settings.Values.ContainsKey("AlertLabelFontFamily")) _alertLabelFontFamily = (string)settings.Values["AlertLabelFontFamily"];
             if (settings.Values.ContainsKey("AlertLabelColor")) _alertLabelColor = HexToColor((string)settings.Values["AlertLabelColor"]);
             if (settings.Values.ContainsKey("AlwaysOnTop")) _alwaysOnTop = (bool)settings.Values["AlwaysOnTop"];
+            if (settings.Values.ContainsKey("WindowX")) _windowX = (int)settings.Values["WindowX"];
+            if (settings.Values.ContainsKey("WindowY")) _windowY = (int)settings.Values["WindowY"];
             
             if (settings.Values.ContainsKey("AlarmsJson"))
             {
@@ -236,7 +267,11 @@ namespace WinClock
             AlertPlayer.MediaPlayer.Play();
         }
 
-        private void MenuExit_Click(object sender, RoutedEventArgs e) => Application.Current.Exit();
+        private void MenuExit_Click(object sender, RoutedEventArgs e)
+        {
+            SaveSettings();
+            Application.Current.Exit();
+        }
 
         private void RootGrid_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
